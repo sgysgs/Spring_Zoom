@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="meetings">
+	<!-- insert -->
+	<insert id="insertMeeting">
+		INSERT INTO MEETINGS(MEETINGID,MEETINGUUID,TOPIC,JOINURL,STARTTIME,DURATION,JOINID,JOINPW,HOSTID,STARTURL,USERID,TYPE)
+		VALUES(#{meetingid},#{uuid},#{topic},#{join_url},#{start_time},#{duration},#{joinId},#{joinPw},#{host_Id},#{start_url},#{userid},#{type})
+	</insert>
+	
+	<insert id="insertInvitation">
+		INSERT INTO USER_INVITATION(ID,MEETINGUUID)
+		VALUES(#{userid},#{uuid})
+	</insert>
+	
+	
+	<!-- select -->
+	<select id="selectMeeting" parameterType="String" resultType="map">
+		select
+			topic as topic,
+			starttime as start_time,
+			joinurl as join_url,
+			joinid as meetingid,
+			duration as duration,
+			meetinguuid as uuid
+		from
+			meetings
+		where 
+			userid = #{userid}
+	</select>	
+	<select id="selectUserInvit" parameterType="String" resultType="map">
+		select 
+			m.meetinguuid,
+	        m.duration,
+	        m.joinid,
+	        m.joinpw,
+	        m.joinurl,
+	        m.starttime,
+	        m.topic
+		from 
+			meetings m ,user_invitation u
+		where 
+			 m.meetinguuid = u.meetinguuid and u.id = #{userid}
+	</select>	
+
+	
+	<!-- delete -->
+	<delete id="deleteMeeting">
+		DELETE FROM 
+			MEETINGS
+		WHERE
+			MEETINGUUID = #{uuid}
+	</delete>
+</mapper>
